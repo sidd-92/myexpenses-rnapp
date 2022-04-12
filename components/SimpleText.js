@@ -7,7 +7,7 @@ import { Text, View } from "react-native";
  * @param {*} props.label Text To Show
  * @returns Text Component
  */
-export default function SimpleText({ type, size, label }) {
+const SimpleText = ({ type, size, label, align, color, marginBottom, marginTop }) => {
 	let font = "Raleway_400Regular";
 	if (type == 100) {
 		font = "Raleway_100Thin";
@@ -26,7 +26,20 @@ export default function SimpleText({ type, size, label }) {
 	}
 	return (
 		<View>
-			<Text style={{ fontFamily: font, fontSize: size }}>{label}</Text>
+			<Text
+				style={{
+					fontFamily: font,
+					fontSize: size,
+					textAlign: align || "auto",
+					color: color || "black",
+					marginBottom: marginBottom,
+					marginTop: marginTop,
+				}}
+			>
+				{label}
+			</Text>
 		</View>
 	);
-}
+};
+
+export default SimpleText;

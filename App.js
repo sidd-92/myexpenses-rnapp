@@ -11,14 +11,12 @@ import {
 } from "@expo-google-fonts/raleway";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AppLoading from "expo-app-loading";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useCallback } from "react";
-import { Button, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Button, Pressable, StyleSheet, Text, Image, View } from "react-native";
 import SimpleText from "./components/SimpleText";
-import Entypo from "@expo/vector-icons/Entypo";
+import SimpleButton from "./components/SimpleButton";
 import * as SplashScreen from "expo-splash-screen";
-import * as Font from "expo-font";
 
 const Stack = createNativeStackNavigator();
 
@@ -94,24 +92,14 @@ export default function App() {
 			) : (
 				<Stack.Navigator>
 					<Stack.Screen
-						options={({ navigation }) =>
-							setHeaderOptions("Home", () => (
-								<Pressable
-									android_ripple={{ color: "white" }}
-									style={{ backgroundColor: "#2b2d42", padding: 6 }}
-									onPress={() => navigation.navigate("About")}
-								>
-									<Text style={{ color: "white" }}>About</Text>
-								</Pressable>
-							))
-						}
+						options={({ navigation }) => setHeaderOptions("Dashboard")}
 						name="Home"
 						component={HomeScreen}
 					/>
 					<Stack.Screen
-						options={({ navigation }) => setHeaderOptions("About")}
-						name="About"
-						component={AboutMeScreen}
+						options={({ navigation }) => setHeaderOptions("My Wardrobe")}
+						name="Wardrobe"
+						component={MyWardrobeScreen}
 					/>
 				</Stack.Navigator>
 			)}
@@ -119,7 +107,7 @@ export default function App() {
 	);
 }
 
-function AboutMeScreen() {
+function MyWardrobeScreen() {
 	return (
 		<View>
 			<Text style={{ fontFamily: "Raleway_500Medium", fontSize: 40 }}>Raleway_500Medium</Text>
@@ -162,22 +150,24 @@ function SignupScreen() {
 
 function HomeScreen({ navigation }) {
 	const [number, onChangeNumber] = useState(null);
-	const [isFocused, setIsFocused] = useState(false);
+	const [wardrobes, setWardrobes] = useState([]);
 	return (
 		<View style={styles.container}>
-			<ScrollView contentContainerStyle={styles.contentContainer}>
-				<SimpleText size={24} label="It Works" />
-				<TextInput
-					onFocus={() => setIsFocused(true)}
-					onBlur={() => setIsFocused(false)}
-					style={[styles.input, { borderColor: isFocused ? "orangered" : "black" }]}
-					onChangeText={onChangeNumber}
-					value={number}
-					selectionColor={"orangered"}
-					placeholder="useless placeholder"
-					keyboardType="default"
-				/>
-			</ScrollView>
+			{wardrobes.length > 0 ? (
+				<SimpleText size={24} label="You Have Wardrobes" />
+			) : (
+				<View style={styles.centerContent}>
+					<SimpleText
+						size={28}
+						align="center"
+						type={800}
+						marginBottom={40}
+						label="Oops ! You dont have a wardrobe"
+					/>
+					<Image style={styles.stretch} source={require("./assets/empty.jpg")} />
+					<SimpleButton width={300} buttonText={"Add Wardrobe"} />
+				</View>
+			)}
 
 			<StatusBar style="light" />
 		</View>
@@ -193,12 +183,16 @@ const styles = StyleSheet.create({
 		backgroundColor: "#edf2f4",
 		paddingTop: 10,
 	},
-	input: {
-		borderRadius: 8,
+	stretch: {
+		width: 400,
+		height: 200,
+		resizeMode: "contain",
+		marginBottom: 40,
+	},
+	centerContent: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
 		margin: 10,
-		borderWidth: 2,
-		padding: 10,
-		fontSize: 16,
-		fontFamily: "Raleway_400Regular",
 	},
 });
